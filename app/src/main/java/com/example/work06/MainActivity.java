@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity  implements recyclerViewInterface{
@@ -40,12 +41,23 @@ public class MainActivity extends AppCompatActivity  implements recyclerViewInte
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv1.setText("");
-                tv2.setText("");
-                numbers = getArray();
-                myAdapter1.items = numbers;
-                recyclerView.setAdapter(myAdapter1);
-                myAdapter1.notifyDataSetChanged();
+                if(et1.getText().toString().equals("") || et2.getText().toString().equals(""))
+                {
+                    Toast.makeText(getApplicationContext(),"Please select",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(isNumeric(et1.getText().toString()) == false || isNumeric(et2.getText().toString()) == false)
+                {
+                    Toast.makeText(getApplicationContext(),"Wrong Input",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    tv1.setText("");
+                    tv2.setText("");
+                    numbers = getArray();
+                    myAdapter1.items = numbers;
+                    recyclerView.setAdapter(myAdapter1);
+                    myAdapter1.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -97,6 +109,17 @@ public class MainActivity extends AppCompatActivity  implements recyclerViewInte
                     arr[i] = String.format("%.4f" ,num);
             }
             return arr;
+        }
+    }
+
+
+    public static boolean isNumeric(String toCheck)
+    {
+        try{ //checking if in the command below theres a problem, like turning a / or .. to double number
+            Double.parseDouble(toCheck);
+            return true;
+        } catch (NumberFormatException e) { // if the try found a problem he will come to here and return false
+            return false;
         }
     }
 
